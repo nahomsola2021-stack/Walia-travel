@@ -1,0 +1,6 @@
+{
+  "name": "Walia Travel — Ethiopian Wildlife & Adventure Tourism",
+  "description": "Premium wildlife safaris, mountain trekking, volcano expeditions, and authentic adventure travel across Ethiopia.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
