@@ -214,109 +214,27 @@ const MountainMark: React.FC<{ className?: string }> = ({ className = '' }) => (
   </svg>
 );
 
-/* ------------------------------------------------------------ JUNGLE KIT */
+/* ---------------------------------------------------- LIGHT NATURE TOUCHES */
 const rnd = (i: number) => { const v = Math.sin(i * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
-type Pt = [number, number];
-const qpt = (t: number, a: Pt, b: Pt): Pt => { const u = 1 - t; return [2 * u * t * a[0] + t * t * b[0], 2 * u * t * a[1] + t * t * b[1]]; };
-const qang = (t: number, a: Pt, b: Pt) =>
-  (Math.atan2(2 * (1 - t) * a[1] + 2 * t * (b[1] - a[1]), 2 * (1 - t) * a[0] + 2 * t * (b[0] - a[0])) * 180) / Math.PI;
 const leafD = (l: number) => `M0 0C${l * 0.3} ${-l * 0.3} ${l * 0.75} ${-l * 0.24} ${l} 0C${l * 0.75} ${l * 0.24} ${l * 0.3} ${l * 0.3} 0 0Z`;
-const TONES: Record<string, string[]> = {
-  night: ['#04120D', '#071812', '#0A2118'], // over photography
-  mid: ['#14392C', '#1B4A3A', '#26604A'],   // over forest-green sections
-  light: ['#4E7653', '#173F35', '#6C9470'], // faint, over ivory sections
-};
 
-/** One stem with paired leaflets (frond) or alternating leaflets (vine). Drawn from (0,0) along +x. */
-const Branch = React.memo(({ len, bend, n, leaf, tone, spread = 58, alt = false }: { len: number; bend: number; n: number; leaf: number; tone: string; spread?: number; alt?: boolean }) => {
-  const cols = TONES[tone];
-  const p1: Pt = [len * 0.55, -len * bend], p2: Pt = [len, -len * bend * 0.25];
-  const items: React.ReactNode[] = [];
-  for (let i = 0; i < n; i++) {
-    const t = 0.1 + (0.9 * i) / (n - 1);
-    const [x, y] = qpt(t, p1, p2);
-    const a = qang(t, p1, p2);
-    const l = leaf * (0.45 + 0.8 * Math.sin(Math.PI * (0.15 + 0.85 * t)));
-    (alt ? [i % 2 ? 1 : -1] : [-1, 1]).forEach((s) =>
-      items.push(<path key={`${i}${s}`} d={leafD(l)} fill={cols[(i + (s > 0 ? 1 : 0)) % 3]} transform={`translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(a + s * spread).toFixed(1)})`} />)
-    );
-  }
-  return (
-    <g>
-      <path d={`M0 0Q${p1} ${p2}`} fill="none" stroke={cols[1]} strokeWidth="2.5" strokeLinecap="round" />
-      {items}
-    </g>
-  );
-});
-
-const FRONDS = [
-  { r: -8, len: 360, bend: 0.22, n: 15, leaf: 44 }, { r: -26, len: 400, bend: 0.3, n: 17, leaf: 50 },
-  { r: -46, len: 360, bend: 0.3, n: 15, leaf: 46 }, { r: -66, len: 300, bend: 0.28, n: 13, leaf: 40 },
-  { r: -84, len: 230, bend: 0.25, n: 11, leaf: 34 }, { r: -36, len: 250, bend: 0.4, n: 11, leaf: 30 },
-];
-const CORNER: Record<string, string> = { bl: 'bottom-0 left-0', br: 'bottom-0 right-0 -scale-x-100', tl: 'top-0 left-0 -scale-y-100', tr: 'top-0 right-0 -scale-100' };
-
-/** A swaying fan of palm fronds growing out of a corner. */
-const Foliage: React.FC<{ corner: 'bl' | 'br' | 'tl' | 'tr'; tone?: string; size?: string; className?: string }> = ({ corner, tone = 'night', size = 'w-[40vw] max-w-[520px]', className = '' }) => (
-  <svg viewBox="0 0 460 440" className={`pointer-events-none absolute -z-10 overflow-visible ${CORNER[corner]} ${size} ${className}`} aria-hidden="true">
-    <g transform="translate(12 430)">
-      {FRONDS.map((f, i) => (
-        <g key={i} transform={`rotate(${f.r})`}>
-          <g className="walia-sway" style={{ animationDelay: `${-i * 1.3}s`, animationDuration: `${6 + i}s` }}>
-            <Branch len={f.len} bend={f.bend} n={f.n} leaf={f.leaf} tone={tone} />
-          </g>
-        </g>
-      ))}
-    </g>
-  </svg>
-);
-
-const VINES = [60, 170, 300, 450, 640, 830, 1000, 1150, 1270, 1390].map((x, i) => ({ x, len: 150 + rnd(i) * 230, bend: (rnd(i + 9) - 0.5) * 0.5, n: 9 + Math.floor(rnd(i + 4) * 6) }));
-
-/** Lianas hanging from the top edge, each swaying on its own rhythm. */
-const Vines: React.FC<{ tone?: string; className?: string }> = ({ tone = 'night', className = '' }) => (
-  <svg viewBox="0 0 1440 420" preserveAspectRatio="xMidYMin slice" className={`pointer-events-none absolute inset-x-0 top-0 -z-10 h-[42vh] w-full ${className}`} aria-hidden="true">
-    {VINES.map((v, i) => (
-      <g key={i} transform={`translate(${v.x} -6) rotate(90)`}>
-        <g className="walia-sway" style={{ animationDelay: `${-i * 1.1}s`, animationDuration: `${7 + rnd(i) * 4}s` }}>
-          <Branch len={v.len} bend={v.bend} n={v.n} leaf={20} tone={tone} spread={72} alt />
-        </g>
-      </g>
-    ))}
-  </svg>
-);
-
-const CANOPY = Array.from({ length: 44 }, (_, i) => ({ x: i * 33 + rnd(i) * 20 - 8, a: -90 + (rnd(i + 7) - 0.5) * 80, l: 70 + rnd(i + 2) * 60 }));
-
-/** A ragged leaf line along a section seam, so one habitat grows into the next. `hang` makes it droop downward. */
-const CanopyEdge: React.FC<{ color: string; hang?: boolean }> = ({ color, hang }) => (
-  <div className="relative z-20 h-0" aria-hidden="true">
-    <svg viewBox="0 0 1440 130" preserveAspectRatio="xMidYMax slice" className={`pointer-events-none absolute inset-x-0 h-20 w-full sm:h-24 ${hang ? 'top-0 rotate-180' : 'bottom-0'}`}>
-      {CANOPY.map((c, i) => <path key={`b${i}`} d={leafD(c.l * 1.3)} fill={color} opacity=".5" transform={`translate(${c.x + 14} 128) rotate(${c.a + 18})`} />)}
-      {CANOPY.map((c, i) => <path key={`f${i}`} d={leafD(c.l)} fill={color} transform={`translate(${c.x} 128) rotate(${c.a})`} />)}
-      <rect x="0" y="122" width="1440" height="8" fill={color} />
-    </svg>
-  </div>
-);
-
-/** A dark trunk at the section edge with a liana looping down it. */
-const TreeTrunk: React.FC<{ side: 'l' | 'r' }> = ({ side }) => (
-  <svg viewBox="0 0 200 900" preserveAspectRatio="xMinYMax slice" className={`pointer-events-none absolute inset-y-0 -z-10 hidden h-full w-48 overflow-visible opacity-80 lg:block ${side === 'l' ? '-left-16' : '-right-16 -scale-x-100'}`} aria-hidden="true">
-    <path d="M0 900C34 884 44 852 48 800C54 700 44 520 56 340C62 220 52 100 58 0H100C96 100 106 220 102 340C98 520 112 700 108 800C112 852 130 884 170 900Z" fill="#050F0B" />
-    <path d="M70 0C66 200 74 420 66 640M88 0C92 220 82 460 90 700" stroke="#0B261E" strokeWidth="2" fill="none" />
-    <g transform="translate(92 100) rotate(90)"><g className="walia-sway"><Branch len={560} bend={0.15} n={16} leaf={26} tone="mid" spread={70} alt /></g></g>
-    <g transform="translate(64 380) rotate(78)"><g className="walia-sway" style={{ animationDelay: '-3s' }}><Branch len={360} bend={-0.2} n={11} leaf={22} tone="mid" spread={70} alt /></g></g>
-  </svg>
-);
-
-/** Leaves spiralling down through the scene. */
-const FallingLeaves: React.FC<{ count?: number }> = ({ count = 9 }) => (
+/** Subtle leaves spiralling gently down through the scene. */
+const FallingLeaves: React.FC<{ count?: number }> = ({ count = 5 }) => (
   <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
     {Array.from({ length: count }, (_, i) => {
       const r = rnd(i + 3);
       return (
-        <svg key={i} viewBox="-2 -14 52 28" className="walia-fall absolute -top-8 w-6" style={{ left: `${(i * (100 / count) + r * 8) % 100}%`, animationDuration: `${14 + r * 12}s`, animationDelay: `${-r * 20}s` }}>
-          <path d={leafD(46)} fill={i % 3 === 0 ? '#E5BA55' : '#4E7653'} opacity=".75" />
+        <svg
+          key={i}
+          viewBox="-2 -14 52 28"
+          className="walia-fall absolute -top-8 w-4 sm:w-5"
+          style={{
+            left: `${(i * (100 / count) + r * 12) % 100}%`,
+            animationDuration: `${16 + r * 12}s`,
+            animationDelay: `${-r * 20}s`,
+          }}
+        >
+          <path d={leafD(42)} fill={i % 2 === 0 ? '#E5BA55' : '#4E7653'} opacity=".55" />
         </svg>
       );
     })}
@@ -324,7 +242,7 @@ const FallingLeaves: React.FC<{ count?: number }> = ({ count = 9 }) => (
 );
 
 /** Drifting fireflies and pollen. Skipped entirely under reduced motion. */
-const Fireflies: React.FC<{ count?: number }> = ({ count = 46 }) => {
+const Fireflies: React.FC<{ count?: number }> = ({ count = 24 }) => {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const c = ref.current;
@@ -545,10 +463,6 @@ export default function HomePage({ onNavigate, onOpenInquiry, onSelectTour, onSe
             repeating-radial-gradient(circle at 88% 82%, transparent 0 30px, rgba(23,63,53,.05) 30px 31px);
         }
 
-        .glass-hero {
-          background: rgba(10,28,22,.42); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%);
-          border: 1px solid rgba(255,255,255,.14); box-shadow: 0 30px 80px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08);
-        }
         .glass-card { background: rgba(255,255,255,.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
         .glass-dark { background: rgba(10,28,22,.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 
@@ -579,15 +493,12 @@ export default function HomePage({ onNavigate, onOpenInquiry, onSelectTour, onSe
         .walia-reveal { opacity: 0; transform: translateY(18px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
         .walia-reveal.is-seen { opacity: 1; transform: none; }
 
-        @keyframes waliaSway { 0%, 100% { transform: rotate(-1.8deg); } 50% { transform: rotate(2.4deg); } }
-        .walia-sway { transform-origin: 0 0; animation: waliaSway 7s ease-in-out infinite; }
-        .walia-par-fg { transition: transform .6s cubic-bezier(.2,.7,.2,1); transform: translate3d(calc(var(--px,0) * 22px), calc(var(--py,0) * 12px), 0); }
         @keyframes waliaFall {
           0% { transform: translate3d(0,0,0) rotate(0); opacity: 0; }
-          8% { opacity: .8; }
+          8% { opacity: .65; }
           25% { transform: translate3d(40px,28vh,0) rotate(110deg); }
           50% { transform: translate3d(-30px,55vh,0) rotate(230deg); }
-          75% { transform: translate3d(50px,82vh,0) rotate(330deg); opacity: .8; }
+          75% { transform: translate3d(50px,82vh,0) rotate(330deg); opacity: .65; }
           100% { transform: translate3d(-10px,112vh,0) rotate(430deg); opacity: 0; }
         }
         .walia-fall { animation: waliaFall 18s linear infinite; }
@@ -596,9 +507,7 @@ export default function HomePage({ onNavigate, onOpenInquiry, onSelectTour, onSe
           .walia-rise, .walia-progress, .walia-mist, .walia-marquee, .walia-pulse { animation: none; }
           .walia-kb, .walia-kb.is-active, .walia-par { transform: none; transition: none; }
           .walia-reveal { opacity: 1; transform: none; transition: none; }
-          .walia-sway { animation: none; }
           .walia-fall { display: none; }
-          .walia-par-fg { transform: none; transition: none; }
         }
       `,
         }}
@@ -654,94 +563,53 @@ export default function HomePage({ onNavigate, onOpenInquiry, onSelectTour, onSe
         <div className="hero-veil-top absolute inset-0 -z-20" />
         <div className="hero-vignette absolute inset-0 -z-20" />
 
-        {/* Living layers: fireflies, mist, ridgeline and a lone acacia */}
-        <div className="absolute inset-0 -z-10"><Fireflies /></div>
+        {/* Subtle ambient touches: floating leaves, soft fireflies & highland mist */}
+        <div className="absolute inset-0 -z-10"><Fireflies count={22} /></div>
+        <FallingLeaves count={5} />
         <div className="pointer-events-none absolute inset-x-0 bottom-[64px] -z-10 h-[34vh] overflow-hidden" aria-hidden="true">
-          <div className="walia-mist absolute -inset-x-[10%] bottom-0 h-3/4 bg-[radial-gradient(60%_100%_at_30%_100%,rgba(230,240,235,.16),transparent),radial-gradient(50%_90%_at_75%_100%,rgba(230,240,235,.12),transparent)]" />
-          <div className="walia-mist slow absolute -inset-x-[10%] bottom-0 h-1/2 bg-[radial-gradient(55%_100%_at_55%_100%,rgba(230,240,235,.14),transparent)]" />
-          <svg viewBox="0 0 1440 200" preserveAspectRatio="none" className="absolute inset-x-0 bottom-0 h-full w-full">
-            <path fill="#071812" opacity=".55" d="M0 200V120L90 90L170 125L260 70L360 130L450 100L560 150L680 95L790 140L900 80L1010 135L1120 105L1230 145L1340 100L1440 130V200Z" />
-            <path fill="#071812" d="M0 200V160L120 140L240 165L380 135L520 170L660 150L820 175L980 145L1140 172L1300 150L1440 165V200Z" />
-          </svg>
-          <svg viewBox="0 0 200 140" className="absolute bottom-0 right-[7%] hidden h-44 md:block" fill="#071812">
-            <ellipse cx="100" cy="50" rx="82" ry="12" /><ellipse cx="66" cy="60" rx="40" ry="7" /><ellipse cx="150" cy="58" rx="38" ry="7" />
-            <path d="M94 140C98 110 94 88 90 66L96 64C100 88 104 110 106 140Z" />
-          </svg>
-        </div>
-
-        {/* Jungle foreground: leaves drift against the mouse for depth */}
-        <FallingLeaves count={10} />
-        <div className="walia-par-fg pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-          <Vines tone="night" />
-          <Foliage corner="tr" tone="night" size="w-[46vw] max-w-[620px]" />
-          <div className="absolute inset-x-0 bottom-[64px] top-0"><Foliage corner="bl" tone="night" size="w-[38vw] max-w-[500px]" /></div>
+          <div className="walia-mist absolute -inset-x-[10%] bottom-0 h-3/4 bg-[radial-gradient(60%_100%_at_30%_100%,rgba(230,240,235,.14),transparent),radial-gradient(50%_90%_at_75%_100%,rgba(230,240,235,.1),transparent)]" />
+          <div className="walia-mist slow absolute -inset-x-[10%] bottom-0 h-1/2 bg-[radial-gradient(55%_100%_at_55%_100%,rgba(230,240,235,.12),transparent)]" />
         </div>
 
         <div className="mx-auto flex w-full max-w-7xl flex-1 items-center px-6 pb-12 pt-32 sm:px-10 sm:pt-36 lg:px-12">
-          <div className="grid w-full grid-cols-1 gap-12 xl:grid-cols-12 xl:items-end">
-            <div className="xl:col-span-8">
-              <div className="walia-rise walia-d1 flex items-center gap-4">
-                <span className="h-px w-12 bg-[#C89B3C]" />
-                <span className="walia-ui text-[11px] font-semibold uppercase tracking-[0.34em] text-[#E5BA55] sm:text-xs">Authentic Journeys</span>
-              </div>
-
-              <h1 className="walia-serif mt-6 text-[clamp(2.6rem,8vw,5.75rem)] font-normal leading-[0.98] tracking-[-0.02em]">
-                <span className="walia-rise walia-d2 block text-[#FBF8F0] drop-shadow-[0_4px_24px_rgba(0,0,0,0.5)]">Extraordinary</span>
-                <span className="walia-rise walia-d3 hero-gold block italic">Ethiopia.</span>
-              </h1>
-
-              <p className="walia-rise walia-d4 mt-8 max-w-lg text-lg font-light leading-relaxed text-white/85 sm:text-xl">
-                Ancient history. Breathtaking landscapes.
-                <br className="hidden sm:block" /> Unforgettable people.
-              </p>
-
-              <div className="walia-rise walia-d5 mt-10 flex flex-wrap items-center gap-4">
-                <button
-                  onClick={() => go('/tours')}
-                  className="walia-ui group inline-flex items-center gap-3 rounded-[6px] bg-[#C89B3C] px-8 py-4 text-xs font-bold uppercase tracking-[0.14em] text-white shadow-[0_14px_34px_rgba(200,155,60,0.38)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#B58930] hover:shadow-[0_18px_44px_rgba(200,155,60,0.5)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F6DB86] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071812] sm:text-[13px]"
-                >
-                  <span>Explore Our Tours</span>
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </button>
-                <button
-                  onClick={() => onOpenInquiry?.()}
-                  className="walia-ui inline-flex items-center gap-2.5 rounded-[6px] border border-white/45 bg-white/10 px-8 py-4 text-xs font-bold uppercase tracking-[0.14em] text-white backdrop-blur-md transition-all duration-300 hover:border-white hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#071812] sm:text-[13px]"
-                >
-                  <Compass className="h-4 w-4 text-[#F6DB86]" />
-                  <span>Plan Your Journey</span>
-                </button>
-              </div>
-
-              <ul className="walia-rise walia-d5 mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-white/70">
-                <li className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[#E5BA55]" /> Licensed Ethiopian operator</li>
-                <li className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-[#E5BA55]" /> Small groups, 6–10 guests</li>
-                <li className="inline-flex items-center gap-2"><Compass className="h-4 w-4 text-[#E5BA55]" /> Tailor-made on request</li>
-              </ul>
+          <div className="w-full max-w-3xl">
+            <div className="walia-rise walia-d1 flex items-center gap-4">
+              <span className="h-px w-12 bg-[#C89B3C]" />
+              <span className="walia-ui text-[11px] font-semibold uppercase tracking-[0.34em] text-[#E5BA55] sm:text-xs">Authentic Journeys</span>
             </div>
 
-            <aside key={active} className="walia-rise hidden xl:col-span-4 xl:block" aria-live="polite">
-              <div className="glass-hero rounded-3xl p-8">
-                <div className="flex items-center justify-between">
-                  <span className="walia-ui text-[11px] font-semibold uppercase tracking-[0.26em] text-[#E5BA55]">{current.eyebrow}</span>
-                  <span className="walia-ui text-xs tabular-nums text-white/55">{active + 1} / {KEYS.length}</span>
-                </div>
-                <h2 className="walia-serif mt-5 text-3xl font-normal leading-tight">{current.title}</h2>
-                <p className="mt-3 text-[15px] leading-relaxed text-white/75">{current.desc}</p>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  <span className="walia-ui inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-[#F6DB86]">
-                    <MapPin className="h-3.5 w-3.5" />{current.tag}
-                  </span>
-                  <span className="walia-ui rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/80">{current.meta}</span>
-                </div>
-                <div className="mt-6 flex items-center justify-between border-t border-white/15 pt-5">
-                  <span className="walia-ui text-xs tracking-wide text-white/55">{current.coords}</span>
-                  <button onClick={() => go('/destinations')} className="walia-ui group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-white transition hover:text-[#F6DB86]">
-                    Discover
-                    <span className="grid h-8 w-8 place-items-center rounded-full bg-[#C89B3C] transition group-hover:bg-[#B58930]"><ArrowRight className="h-4 w-4" /></span>
-                  </button>
-                </div>
-              </div>
-            </aside>
+            <h1 className="walia-serif mt-6 text-[clamp(2.6rem,8vw,5.75rem)] font-normal leading-[0.98] tracking-[-0.02em]">
+              <span className="walia-rise walia-d2 block text-[#FBF8F0] drop-shadow-[0_4px_24px_rgba(0,0,0,0.5)]">Extraordinary</span>
+              <span className="walia-rise walia-d3 hero-gold block italic">Ethiopia.</span>
+            </h1>
+
+            <p className="walia-rise walia-d4 mt-8 max-w-lg text-lg font-light leading-relaxed text-white/85 sm:text-xl">
+              Ancient history. Breathtaking landscapes.
+              <br className="hidden sm:block" /> Unforgettable people.
+            </p>
+
+            <div className="walia-rise walia-d5 mt-10 flex flex-wrap items-center gap-4">
+              <button
+                onClick={() => go('/tours')}
+                className="walia-ui group inline-flex items-center gap-3 rounded-[6px] bg-[#C89B3C] px-8 py-4 text-xs font-bold uppercase tracking-[0.14em] text-white shadow-[0_14px_34px_rgba(200,155,60,0.38)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#B58930] hover:shadow-[0_18px_44px_rgba(200,155,60,0.5)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F6DB86] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071812] sm:text-[13px]"
+              >
+                <span>Explore Our Tours</span>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </button>
+              <button
+                onClick={() => onOpenInquiry?.()}
+                className="walia-ui inline-flex items-center gap-2.5 rounded-[6px] border border-white/45 bg-white/10 px-8 py-4 text-xs font-bold uppercase tracking-[0.14em] text-white backdrop-blur-md transition-all duration-300 hover:border-white hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#071812] sm:text-[13px]"
+              >
+                <Compass className="h-4 w-4 text-[#F6DB86]" />
+                <span>Plan Your Journey</span>
+              </button>
+            </div>
+
+            <ul className="walia-rise walia-d5 mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-white/70">
+              <li className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[#E5BA55]" /> Licensed Ethiopian operator</li>
+              <li className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-[#E5BA55]" /> Small groups, 6–10 guests</li>
+              <li className="inline-flex items-center gap-2"><Compass className="h-4 w-4 text-[#E5BA55]" /> Tailor-made on request</li>
+            </ul>
           </div>
         </div>
 
@@ -799,8 +667,6 @@ export default function HomePage({ onNavigate, onOpenInquiry, onSelectTour, onSe
            2. ICONIC DESTINATIONS
           ===================================================================== */}
       <section className="walia-topo relative isolate overflow-hidden">
-        <Foliage corner="tr" tone="light" size="w-[34vw] max-w-[440px]" className="opacity-[0.14]" />
-        <Foliage corner="bl" tone="light" size="w-[26vw] max-w-[340px]" className="opacity-[0.12]" />
         <div className="mx-auto max-w-7xl px-6 py-24 sm:px-10 lg:px-12 lg:py-32">
           <Reveal className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
@@ -854,15 +720,9 @@ export default function HomePage({ onNavigate, onOpenInquiry, onSelectTour, onSe
       {/* =====================================================================
            3. FIELD GUIDE: endemic animals found only in Ethiopia
           ===================================================================== */}
-      <CanopyEdge color="#0B261E" />
-      <section className="walia-grain relative isolate overflow-hidden bg-[#0B261E] py-24 text-white lg:py-32">
-        <div className="pointer-events-none absolute inset-0 -z-10"><Fireflies count={26} /></div>
-        <FallingLeaves count={8} />
-        <TreeTrunk side="l" />
-        <TreeTrunk side="r" />
-        <Vines tone="mid" className="opacity-80" />
-        <Foliage corner="bl" tone="mid" size="w-[34vw] max-w-[460px]" />
-        <Foliage corner="br" tone="mid" size="w-[34vw] max-w-[460px]" />
+      <section className="walia-grain relative isolate overflow-hidden border-t border-[#C89B3C]/25 bg-[#0B261E] py-24 text-white lg:py-32">
+        <div className="pointer-events-none absolute inset-0 -z-10"><Fireflies count={18} /></div>
+        <FallingLeaves count={5} />
         <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(70%_60%_at_85%_0%,rgba(200,155,60,.14),transparent)]" />
         <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-12">
           <Reveal className="max-w-2xl">
@@ -941,7 +801,6 @@ export default function HomePage({ onNavigate, onOpenInquiry, onSelectTour, onSe
       {/* =====================================================================
            4. WHY WALIA + STATS
           ===================================================================== */}
-      <CanopyEdge color="#0B261E" hang />
       <section className="border-y border-[#E6DED1] bg-white py-20 lg:py-24">
         <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-12">
           <Reveal className="max-w-2xl">
@@ -981,8 +840,6 @@ export default function HomePage({ onNavigate, onOpenInquiry, onSelectTour, onSe
            5. FEATURED TOURS
           ===================================================================== */}
       <section className="walia-topo relative isolate overflow-hidden">
-        <Foliage corner="br" tone="light" size="w-[34vw] max-w-[440px]" className="opacity-[0.14]" />
-        <Foliage corner="tl" tone="light" size="w-[26vw] max-w-[340px]" className="opacity-[0.12]" />
         <div className="mx-auto max-w-7xl px-6 py-24 sm:px-10 lg:px-12 lg:py-32">
           <Reveal className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
             <div>
@@ -1106,13 +963,9 @@ export default function HomePage({ onNavigate, onOpenInquiry, onSelectTour, onSe
       {/* =====================================================================
            7. FINAL CTA
           ===================================================================== */}
-      <CanopyEdge color="#173F35" />
-      <section className="walia-grain relative isolate overflow-hidden bg-[#173F35] py-24 text-white sm:py-28">
-        <div className="pointer-events-none absolute inset-0 -z-10"><Fireflies count={30} /></div>
-        <FallingLeaves count={7} />
-        <Vines tone="mid" className="opacity-70" />
-        <Foliage corner="bl" tone="mid" size="w-[34vw] max-w-[460px]" />
-        <Foliage corner="br" tone="mid" size="w-[34vw] max-w-[460px]" />
+      <section className="walia-grain relative isolate overflow-hidden border-t border-[#C89B3C]/25 bg-[#173F35] py-24 text-white sm:py-28">
+        <div className="pointer-events-none absolute inset-0 -z-10"><Fireflies count={18} /></div>
+        <FallingLeaves count={4} />
         <div className="pointer-events-none absolute inset-0 -z-10" style={{ background: 'radial-gradient(60% 80% at 50% 0%, rgba(200,155,60,0.16) 0%, rgba(200,155,60,0) 70%)' }} />
         <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
           <h2 className="walia-serif text-3xl font-normal text-white sm:text-5xl">Ready for Your Ethiopian Adventure?</h2>

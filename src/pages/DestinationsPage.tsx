@@ -21,18 +21,49 @@ const FALLBACK_IMG =
 const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 const LETTERS = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
 
-/** "October to March" -> {9,10,11,0,1,2}. Returns null if no month names are found. */
+/** 
+ * Replaces restrictive best seasons with "Almost every month", 
+ * while preserving "Year-round" and suffix notes (e.g., "; best for festivals").
+ */
+const getDisplaySeason = (season?: string) => {
+  if (!season) return undefined;
+  const lower = season.toLowerCase();
+  
+  if (lower.includes('year-round') || lower.includes('all year') || lower.includes('almost every month')) {
+    return season;
+  }
+  
+  const parts = season.split(';');
+  return `Almost every month${parts.length > 1 ? ';' + parts.slice(1).join(';') : ''}`;
+};
+
+/** Parses strings to month indices. Correctly processes "Year-round" and "Almost every month". */
 const monthsOf = (s?: string): Set<number> | null => {
   if (!s) return null;
-  const found = (s.toLowerCase().match(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*/g) || []).map((w) =>
+  const lower = s.toLowerCase();
+  
+  // Fully highlight 12 months for year-round
+  if (lower.includes('year-round') || lower.includes('all year')) {
+    return new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+  }
+  
+  // Highlight 10 months (Sep-Jun) to reflect "almost every month"
+  if (lower.includes('almost every month')) {
+    return new Set([0, 1, 2, 3, 4, 5, 8, 9, 10, 11]);
+  }
+  
+  const found = (lower.match(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*/g) || []).map((w) =>
     MONTHS.indexOf(w.slice(0, 3))
   );
+  
   if (!found.length) return null;
+  
   const set = new Set<number>([found[0]]);
   if (found.length >= 2 && /\b(to|through|until)\b|[–-]/i.test(s)) {
     let i = found[0];
     while (i !== found[1]) { i = (i + 1) % 12; set.add(i); }
   } else found.forEach((m) => set.add(m));
+  
   return set;
 };
 
@@ -158,7 +189,11 @@ export const DestinationsPage: React.FC<DestinationsPageProps> = ({ onSelectDest
           <div className="columns-1 gap-7 sm:columns-2 lg:columns-3">
             {filtered.map((dest, i) => {
               const bg = (dest as any).heroImage || (dest as any).image || FALLBACK_IMG;
-              const best = monthsOf(dest.bestSeason);
+              
+              // Apply the logic here to widen the destination's best times.
+              const displaySeason = getDisplaySeason(dest.bestSeason);
+              const best = monthsOf(displaySeason);
+              
               return (
                 <article
                   key={dest.id}
@@ -198,7 +233,7 @@ export const DestinationsPage: React.FC<DestinationsPageProps> = ({ onSelectDest
 
                     <div className="mt-5">
                       <p className="mb-2 text-xs font-semibold text-[#10302A]/60">
-                        Best time to go{dest.bestSeason ? `: ${dest.bestSeason}` : ''}
+                        Best time to go{displaySeason ? `: ${displaySeason}` : ''}
                       </p>
                       {best && (
                         <div className="grid grid-cols-12 gap-[3px]" aria-hidden>
