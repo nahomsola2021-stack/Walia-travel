@@ -19,12 +19,12 @@ import { ContactPage } from './pages/ContactPage';
 
 // Types & Data
 import { Tour, Destination } from './types';
-import { TOURS_DATA } from './data/tours';
+import { ExtendedTour, TOURS_DATA } from './data/tours';
 import { DESTINATIONS_DATA } from './data/destinations';
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState<string>('/');
-  const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
+  const [selectedTour, setSelectedTour] = useState<Tour | ExtendedTour | null>(null);
   const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
 
   // Global Inquiry Modal State
