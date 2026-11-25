@@ -25,9 +25,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenInquiry, onNavigate 
       <WildStyles />
 
       <PageHero
-        tag="About Walia Travel"
-        title="Crafting your best memories"
-        sub="Immersive journeys honoring Ethiopia's unique heritage, vibrant cultures, and untouched natural wonders."
+        tag="About Walia Travel | Ethiopian Tourism Experts"
+        title="Discover Ethiopia and Embrace the Journey"
+        sub="Authentic wildlife, cultural, historical, and nature experiences created by passionate Ethiopian tourism professionals."
         image="https://res.cloudinary.com/dw1ohipim/image/upload/v1789393456/b37btmwltxmlwbt7lefb.jpg"
       />
 
@@ -42,18 +42,18 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenInquiry, onNavigate 
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-[#C89B3C]/30 bg-white/80 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#C89B3C] shadow-sm backdrop-blur-sm">
                 <Sparkles className="h-3.5 w-3.5" />
-                The Visionary Behind Walia
+                Ethiopian Tourism Experts
               </div>
               <h2 className="mt-5 font-serif text-4xl font-bold leading-tight text-[#173F35] sm:text-6xl">
-                Eyerusalem Tigistu <span className="font-normal italic text-[#C89B3C]">(Jerry)</span>
+                Walia Travel
               </h2>
             </div>
 
             <div className="flex items-center gap-3 rounded-2xl border border-[#E6DED1] bg-white px-5 py-3.5 shadow-sm">
               <Compass className="h-5 w-5 text-[#C89B3C]" />
               <div className="text-left">
-                <p className="text-[11px] font-bold uppercase tracking-widest text-[#352D27]/50">Roots & Origin</p>
-                <p className="font-serif text-sm font-bold text-[#173F35]">Lalibela, Amhara • Ethiopia</p>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-[#352D27]/50">Owned & Led in</p>
+                <p className="font-serif text-sm font-bold text-[#173F35]">Ethiopia</p>
               </div>
             </div>
           </div>
@@ -62,22 +62,22 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenInquiry, onNavigate 
           <div className="relative mt-12 overflow-hidden rounded-3xl bg-[#173F35] p-8 text-[#F7F3E9] shadow-2xl sm:p-12 md:p-14">
             <Quote className="pointer-events-none absolute -right-6 -top-6 h-44 w-44 text-[#C89B3C]/10" />
             <div className="relative z-10">
-              <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#C89B3C]">Founder's Ethos</p>
+              <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#C89B3C]">Who We Are</p>
               <blockquote className="mt-4 font-serif text-2xl italic leading-relaxed text-[#F7F3E9] sm:text-3xl md:leading-[1.5]">
-                "An innovative travel company dedicated to showcasing the rich cultural heritage, breathtaking landscapes, and diverse ecosystems of Ethiopia."
+                "Walia Travel is an Ethiopian-owned travel and tour company led by a team of passionate, knowledgeable, and dedicated Ethiopian tourism professionals."
               </blockquote>
               <div className="mt-8 flex flex-wrap items-center gap-6 border-t border-[#F7F3E9]/15 pt-6 text-xs uppercase tracking-widest text-[#F7F3E9]/70">
                 <span className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-[#C89B3C]" />
-                  Cultural Historian
+                  Local Expertise
                 </span>
                 <span className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-[#C89B3C]" />
-                  Eco-Adventure Pioneer
+                  Genuine Hospitality
                 </span>
                 <span className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-[#C89B3C]" />
-                  Storyteller
+                  Professional Service
                 </span>
               </div>
             </div>
@@ -89,17 +89,17 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenInquiry, onNavigate 
               {
                 num: '01',
                 label: 'The Inspiration',
-                text: 'Inspired by a deep love for Ethiopian history and natural beauty, Jerry established Walia Travel to give travelers an authentic and meaningful way to experience this extraordinary region.',
+                text: "Our inspiration comes from Ethiopia's extraordinary natural treasures — endemic wildlife, diverse birdlife, dramatic mountains, lush forests, and fascinating ecosystems. The iconic Walia Ibex reflects the spirit behind our name and our passion for nature and wildlife conservation.",
               },
               {
                 num: '02',
-                label: 'The Heritage',
-                text: "Born and raised in Lalibela/Amhara, Jerry developed a passion for travel and storytelling at an early age. With a background in tourism and cultural studies, she set out to go beyond traditional tourism.",
+                label: 'The Experiences',
+                text: "From the spectacular Simien and Bale Mountains to the Great Rift Valley, we create wildlife tours, cultural and historical tours, birdwatching experiences, trekking adventures, nature excursions, and tailor-made Ethiopia travel packages.",
               },
               {
                 num: '03',
-                label: 'The Craft',
-                text: 'Through Walia Travel, she has introduced a series of specialized tours, from cultural explorations to eco-adventures, each thoughtfully designed to connect travelers with the soul of Ethiopia.',
+                label: 'The Connection',
+                text: "We combine destination knowledge, genuine hospitality, professional dedication, and reliable travel services to create authentic experiences that connect travelers with nature, local communities, and the true spirit of Ethiopia.",
               },
             ].map((item) => (
               <div
@@ -124,11 +124,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenInquiry, onNavigate 
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#C89B3C]">Our Core Pillars</p>
               <h2 className="mt-3 max-w-2xl font-serif text-4xl font-bold leading-[1.08] text-[#173F35] sm:text-5xl">
-                Responsible tourism & legacy
+                Responsible travel, lasting impact
               </h2>
             </div>
             <p className="max-w-md text-base leading-relaxed text-[#352D27]/70">
-              Every expedition is built to protect Ethiopia’s fragile ecosystems while empowering the communities who call them home.
+              Our commitment extends beyond travel to the conservation and preservation of Ethiopia's natural and cultural heritage.
             </p>
           </div>
 
@@ -137,16 +137,16 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenInquiry, onNavigate 
               {
                 Icon: Heart,
                 badge: 'Conservation First',
-                title: 'Commitment to conservation',
-                a: "With a keen awareness of the importance of preserving Ethiopia's natural and cultural assets, Jerry actively collaborates with local communities, conservation organizations, and cultural institutions.",
-                b: "This commitment not only enhances the travel experience but also supports local livelihoods and conservation efforts, particularly for endangered species like the Walia ibex, which inspired the company's name and logo.",
+                title: 'Nature & heritage',
+                a: "We value responsible tourism, sustainable development, wildlife conservation, and the preservation of Ethiopia's natural and cultural heritage.",
+                b: 'Our journeys highlight the ecosystems, wildlife, traditions, and communities that make Ethiopia exceptional while encouraging respect for the places and people we visit.',
               },
               {
                 Icon: ShieldCheck,
-                badge: 'Enduring Trust',
-                title: 'Our legacy and impact',
-                a: "Today, Walia Travel is recognized as a trusted name in Ethiopian tourism, embodying Jerry's vision of responsible exploration and cultural exchange.",
-                b: 'She continues to lead the company in creating experiences that transform how travelers see and connect with Ethiopia, while also making a positive impact on the communities and environments they visit.',
+                badge: 'Trusted Local Experts',
+                title: 'Your Ethiopian journey',
+                a: "We don't just show you Ethiopia — we help you experience it through the eyes of people who know it, love it, and proudly call it home.",
+                b: 'Every tailor-made journey is designed to combine adventure and discovery with genuine connection, reliable service, and lasting memories.',
               },
             ].map(({ Icon, badge, title, a, b }) => (
               <div
@@ -186,7 +186,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenInquiry, onNavigate 
               </div>
               <h2 className="mt-6 font-serif text-4xl font-bold sm:text-5xl">Our vision</h2>
               <p className="mt-8 border-l-2 border-[#C89B3C] pl-6 font-serif text-2xl italic leading-relaxed text-[#F7F3E9]/90">
-                "To be the leading gateway for immersive and responsible travel experiences in the Horn of Africa, showcasing the natural wonders, vibrant cultures, and rich history of Ethiopia to the world."
+                "To share Ethiopia's extraordinary natural beauty, unique wildlife, rich cultural heritage, and remarkable history with travelers from around the world."
               </p>
             </div>
 
@@ -198,7 +198,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenInquiry, onNavigate 
               </div>
               <h2 className="mt-6 font-serif text-4xl font-bold sm:text-5xl">Our mission</h2>
               <p className="mt-8 text-lg leading-[1.9] text-[#F7F3E9]/80">
-                Walia Travel is dedicated to connecting travelers with the heart of Ethiopia by offering unforgettable journeys that honor local heritage, celebrate diverse ecosystems, and support sustainable tourism practices. Through respectful and responsible exploration, we aim to foster cultural exchange, enrich local communities, and inspire a global appreciation for Ethiopia's unique landscapes and traditions.
+                To create memorable, authentic journeys through destination knowledge, genuine Ethiopian hospitality, professional dedication, and reliable travel services. We connect travelers with nature, local communities, and the true spirit of Ethiopia through responsible and sustainable tourism.
               </p>
             </div>
           </div>
@@ -213,7 +213,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenInquiry, onNavigate 
         <p className="mt-6 text-xs font-bold uppercase tracking-[0.25em] text-[#C89B3C]">The People Behind Every Journey</p>
         <h2 className="mt-3 font-serif text-4xl font-bold text-[#173F35] sm:text-5xl">Our team</h2>
         <p className="mx-auto mt-6 max-w-3xl text-xl leading-[1.85] text-[#352D27]/80">
-          At Walia Travel, we're more than just a team: we're a family of travel enthusiasts, cultural ambassadors, and experienced professionals dedicated to sharing the wonders of Ethiopia with the world. Each member of our team brings a unique blend of local knowledge, travel expertise, and a deep passion for Ethiopian culture, landscapes, and wildlife.
+          Walia Travel is led by passionate, knowledgeable, and dedicated Ethiopian tourism professionals. Rooted in local expertise and inspired by a deep love for our country, we proudly share Ethiopia through the eyes of people who know it, love it, and call it home.
         </p>
 
         {/* Team Pillars */}

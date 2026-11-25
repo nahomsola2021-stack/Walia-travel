@@ -920,7 +920,7 @@ export default function HomePage({ onNavigate, onOpenInquiry, onSelectTour, onSe
                 <span className="italic text-[#173F35]">A Living Connection.</span>
               </h2>
               <p className="mt-5 text-lg leading-relaxed text-[#352D27]/80">
-                From ancient rock-hewn sanctuaries in Lalibela to timeless ceremonies along the Omo River, our journeys are structured around unhurried encounters, local life, and legendary Ethiopian warmth.
+                Walia Travel is an Ethiopian-owned travel and tour company creating authentic wildlife, cultural, historical, and nature experiences. Through local expertise and genuine hospitality, we help travelers connect with Ethiopia's landscapes, communities, and true spirit.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <button onClick={() => onOpenInquiry?.()} className="walia-ui inline-flex items-center gap-2 rounded-[6px] bg-[#C89B3C] px-7 py-3.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition hover:bg-[#B58930]">
