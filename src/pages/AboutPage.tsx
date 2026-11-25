@@ -13,6 +13,11 @@ import {
   ShieldCheck,
   TreePine,
   ArrowUpRight,
+  Sparkles,
+  CheckCircle2,
+  Award,
+  Users,
+  MountainSnow,
 } from 'lucide-react';
 import { WildStyles, PageHero } from '../components/WildUI';
 
@@ -21,13 +26,11 @@ interface AboutPageProps {
   onNavigate: (path: string) => void;
 }
 
-/* Brand tokens (unchanged from the rest of the site).
-   Gold on light backgrounds uses a darker tone (#8F6A1E) so small text passes contrast. */
 const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C89B3C] focus-visible:ring-offset-2 focus-visible:ring-offset-[#173F35]';
 
 /** Fires once when the element scrolls into view. */
-function useInView<T extends HTMLElement>() {
+function useInView<T extends HTMLElement>(threshold = 0.2) {
   const ref = useRef<T>(null);
   const [seen, setSeen] = useState(false);
   useEffect(() => {
@@ -43,23 +46,23 @@ function useInView<T extends HTMLElement>() {
           io.disconnect();
         }
       },
-      { threshold: 0.3 }
+      { threshold }
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [threshold]);
   return [ref, seen] as const;
 }
 
-/** The one signature moment: the Simien escarpment rising into the dark section. */
+/** Signature Simien escarpment transition. */
 const Ridge: React.FC = () => {
   const [ref, seen] = useInView<HTMLDivElement>();
   return (
     <div ref={ref} className="relative -mb-px bg-[#F7F3E9]" aria-hidden="true">
-      <svg viewBox="0 0 1440 160" preserveAspectRatio="none" className="block h-20 w-full md:h-36">
+      <svg viewBox="0 0 1440 160" preserveAspectRatio="none" className="block h-16 w-full md:h-28">
         <g
-          className={`motion-safe:transition-transform motion-safe:duration-[1400ms] motion-safe:ease-out ${
-            seen ? 'translate-y-0' : 'motion-safe:translate-y-10'
+          className={`motion-safe:transition-transform motion-safe:duration-[1200ms] motion-safe:ease-out ${
+            seen ? 'translate-y-0' : 'motion-safe:translate-y-8'
           }`}
         >
           <path
@@ -68,8 +71,8 @@ const Ridge: React.FC = () => {
           />
         </g>
         <g
-          className={`motion-safe:transition-transform motion-safe:delay-200 motion-safe:duration-[1400ms] motion-safe:ease-out ${
-            seen ? 'translate-y-0' : 'motion-safe:translate-y-16'
+          className={`motion-safe:transition-transform motion-safe:delay-150 motion-safe:duration-[1200ms] motion-safe:ease-out ${
+            seen ? 'translate-y-0' : 'motion-safe:translate-y-12'
           }`}
         >
           <path
@@ -84,40 +87,60 @@ const Ridge: React.FC = () => {
 
 const stories = [
   {
-    label: 'Where the name comes from',
-    text: "Our inspiration comes from Ethiopia's extraordinary natural treasures: endemic wildlife, diverse birdlife, dramatic mountains, lush forests and fascinating ecosystems. The iconic Walia Ibex reflects the spirit behind our name and our passion for nature and wildlife conservation.",
+    title: 'Where the Name Comes From',
+    badge: 'Our Origin',
+    text: "Inspired by Ethiopia's rare Walia Ibex inhabiting the high Simien cliffs. It symbolizes strength, local independence, and our passion for endemic wildlife conservation.",
   },
   {
-    label: 'What we create',
-    text: 'From the spectacular Simien and Bale Mountains to the Great Rift Valley, we create wildlife tours, cultural and historical tours, birdwatching experiences, trekking adventures, nature excursions and tailor-made Ethiopia travel packages.',
+    title: 'What We Create',
+    badge: 'Bespoke Journeys',
+    text: 'From historic rock-hewn wonders to high-altitude trekking across Simien and Bale, we craft authentic journeys tailored specifically to your group.',
   },
   {
-    label: 'How we do it',
-    text: 'We combine destination knowledge, genuine hospitality, professional dedication and reliable travel services to create authentic experiences that connect travelers with nature, local communities and the true spirit of Ethiopia.',
+    title: 'How We Travel',
+    badge: 'Local Philosophy',
+    text: 'We combine native destination mastery with genuine hospitality, connecting you directly to local communities and wild ecosystems.',
   },
 ];
 
 const experiences = [
-  { Icon: Binoculars, title: 'Wildlife tours', note: 'Endemic species in their own habitat' },
-  { Icon: Landmark, title: 'Cultural and historical tours', note: 'Ancient sites and living traditions' },
-  { Icon: TreePine, title: 'Birdwatching', note: 'Forests, lakes and highland valleys' },
-  { Icon: Footprints, title: 'Trekking adventures', note: 'Simien, Bale and beyond' },
-  { Icon: Mountain, title: 'Nature excursions', note: 'Rift Valley landscapes at your pace' },
-  { Icon: Route, title: 'Tailor-made packages', note: 'Journeys built around you' },
+  { Icon: Binoculars, title: 'Wildlife Tours', note: 'Endemic species in untouched highland habitats', filterPath: '/tours?category=wildlife' },
+  { Icon: Landmark, title: 'Cultural & History', note: 'Ancient kingdoms and living traditions', filterPath: '/tours?category=culture' },
+  { Icon: TreePine, title: 'Birdwatching', note: 'Rift Valley lakes and highland valleys', filterPath: '/tours?category=birdwatching' },
+  { Icon: Footprints, title: 'Trekking Expeditions', note: 'Conquer Simien and Bale peaks', filterPath: '/tours?category=trekking' },
+  { Icon: Mountain, title: 'Nature Excursions', note: 'Volcanoes, salt flats, and Rift canyons', filterPath: '/tours?category=nature' },
+  { Icon: Route, title: 'Tailor-Made Packages', note: 'Journeys designed 100% around you', filterPath: 'inquiry' },
 ];
 
-const team = [
-  { Icon: Globe, title: 'Local cultural ambassadors', note: 'People who call Ethiopia home' },
-  { Icon: Binoculars, title: 'Certified wildlife guides', note: 'Trained to read the landscape' },
-  { Icon: Landmark, title: 'Multilingual storytellers', note: 'History told in your language' },
-  { Icon: LifeBuoy, title: '24/7 expedition support', note: 'Help on the trail, any hour' },
+const stats = [
+  { label: 'Local Expertise', value: '100%', subtext: 'Ethiopian Owned & Led', icon: Users },
+  { label: 'Endemic Wildlife Focus', value: '15+', subtext: 'Highland Expeditions', icon: MountainSnow },
+  { label: 'Guest Rating', value: '5.0★', subtext: 'Verified Reviews', icon: Award },
+  { label: 'Tailored Routes', value: '50+', subtext: 'Across Ethiopia', icon: Compass },
+];
+
+const teamPillars = [
+  { Icon: Globe, title: 'Local Cultural Ambassadors', note: 'Native guides who call Ethiopia home.' },
+  { Icon: Binoculars, title: 'Certified Wildlife Trackers', note: 'Trained to read the highland wildlife.' },
+  { Icon: Landmark, title: 'Multilingual Historians', note: 'Ancient heritage told in your language.' },
+  { Icon: LifeBuoy, title: '24/7 Trail Support', note: 'Dedicated logistics on every single route.' },
 ];
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onOpenInquiry, onNavigate }) => {
+  /** Handles clicking any 'Explore' button throughout the page */
+  const handleExploreAction = (filterPath: string, tourTitle: string) => {
+    if (filterPath === 'inquiry') {
+      onOpenInquiry(tourTitle);
+    } else {
+      onNavigate(filterPath);
+    }
+  };
+
   return (
     <div className="w-full bg-[#F7F3E9] font-sans text-[#352D27] selection:bg-[#173F35] selection:text-[#F7F3E9]">
       <WildStyles />
 
+      {/* HERO SECTION */}
       <PageHero
         tag="About Walia Travel | Ethiopian Tourism Experts"
         title="Discover Ethiopia and Embrace the Journey"
@@ -125,125 +148,184 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenInquiry, onNavigate 
         image="https://res.cloudinary.com/dw1ohipim/image/upload/v1789393456/b37btmwltxmlwbt7lefb.jpg"
       />
 
-      {/* WHO WE ARE: sticky statement beside an editorial read */}
-      <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8 md:py-32">
-        <div className="grid gap-14 lg:grid-cols-12 lg:gap-20">
-          <div className="lg:col-span-5">
-            <div className="lg:sticky lg:top-28">
-              <p className="inline-flex items-center gap-2 border-l-2 border-[#C89B3C] pl-3 text-sm font-semibold text-[#8F6A1E]">
-                <Compass className="h-4 w-4" aria-hidden="true" />
-                Owned and led in Ethiopia
-              </p>
-              <h2 className="mt-6 font-serif text-5xl font-bold leading-[1.02] tracking-tight text-[#173F35] sm:text-6xl xl:text-7xl">
-                Ethiopia, shown by the people who live it.
-              </h2>
-              <p className="mt-8 max-w-md font-serif text-xl leading-[1.7] text-[#352D27]/80">
-                Walia Travel is an Ethiopian-owned travel and tour company led by passionate, knowledgeable and dedicated Ethiopian tourism professionals.
-              </p>
+      {/* TRUST STATS BANNER */}
+      <section className="relative z-10 -mt-10 mx-auto max-w-7xl px-5 sm:px-8">
+        <div className="grid grid-cols-2 gap-4 rounded-3xl border border-[#E6DED1] bg-white/95 p-6 shadow-xl backdrop-blur-md md:grid-cols-4 md:p-8">
+          {stats.map(({ label, value, subtext, icon: StatIcon }) => (
+            <div key={label} className="flex flex-col items-center text-center p-2">
+              <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-[#173F35]/5 text-[#8F6A1E]">
+                <StatIcon className="h-5 w-5" aria-hidden="true" />
+              </div>
+              <span className="font-serif text-3xl font-bold tracking-tight text-[#173F35] sm:text-4xl">{value}</span>
+              <span className="mt-1 text-xs font-bold uppercase tracking-wider text-[#352D27]">{label}</span>
+              <span className="text-xs text-[#352D27]/60">{subtext}</span>
             </div>
-          </div>
-
-          <div className="lg:col-span-7">
-            <div className="divide-y divide-[#E6DED1] border-y border-[#E6DED1]">
-              {stories.map((s) => (
-                <article key={s.label} className="grid gap-3 py-10 md:grid-cols-[11rem_1fr] md:gap-10">
-                  <h3 className="font-serif text-xl font-bold text-[#173F35]">{s.label}</h3>
-                  <p className="max-w-[62ch] text-lg leading-[1.85] text-[#352D27]/85">{s.text}</p>
-                </article>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
+      {/* WHO WE ARE: CLEAN 3-PILLAR STORY GRID */}
+      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 md:py-28">
+        <div className="text-center max-w-3xl mx-auto">
+          <span className="inline-flex items-center gap-2 rounded-full bg-[#C89B3C]/15 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#8F6A1E]">
+            <Compass className="h-4 w-4" aria-hidden="true" />
+            Owned and Led in Ethiopia
+          </span>
+          <h2 className="mt-4 font-serif text-3xl font-bold leading-tight text-[#173F35] sm:text-5xl">
+            Ethiopia, shown by the people who live it.
+          </h2>
+          <p className="mt-4 font-serif text-lg leading-relaxed text-[#352D27]/80 sm:text-xl">
+            Walia Travel is an Ethiopian-owned travel and tour company led by passionate, knowledgeable tourism professionals.
+          </p>
+        </div>
+
+        <div className="mt-14 grid gap-8 md:grid-cols-3">
+          {stories.map((s) => (
+            <div
+              key={s.title}
+              className="flex flex-col justify-between rounded-3xl border border-[#E6DED1] bg-white p-8 shadow-sm transition-all duration-300 hover:shadow-md hover:border-[#C89B3C]"
+            >
+              <div>
+                <span className="text-xs font-bold uppercase tracking-widest text-[#8F6A1E]">
+                  {s.badge}
+                </span>
+                <h3 className="mt-3 font-serif text-2xl font-bold text-[#173F35]">{s.title}</h3>
+                <p className="mt-4 text-base leading-relaxed text-[#352D27]/80">{s.text}</p>
+              </div>
+              <button
+                onClick={() => onOpenInquiry(`Inquiry regarding: ${s.title}`)}
+                className={`mt-8 inline-flex items-center gap-2 text-sm font-bold text-[#173F35] transition-colors hover:text-[#8F6A1E] ${focusRing}`}
+              >
+                Learn more & plan <ArrowUpRight className="h-4 w-4" />
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ESCARPMENT RIDGE SEPARATOR */}
       <Ridge />
 
-      {/* THE WALIA IBEX + EXPERIENCES */}
-      <section className="relative bg-[#173F35] pb-24 pt-6 text-[#F7F3E9] md:pb-32">
+      {/* EXPERIENCES GRID WITH FUNCTIONAL EXPLORE BUTTONS */}
+      <section className="relative bg-[#173F35] pb-24 pt-10 text-[#F7F3E9] md:pb-32">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
-            <h2 className="font-serif text-4xl font-bold leading-[1.05] sm:text-6xl lg:col-span-7">
-              Named for an ibex found nowhere else on earth.
-            </h2>
-            <p className="max-w-md text-lg leading-[1.8] text-[#F7F3E9]/75 lg:col-span-5 lg:justify-self-end">
-              The Walia Ibex lives in Ethiopia's Simien Mountains. It stands for what we protect and what we invite you to see.
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#F7F3E9]/15 pb-10">
+            <div>
+              <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#C89B3C]">
+                <Sparkles className="h-4 w-4" /> Named for the Walia Ibex
+              </span>
+              <h2 className="mt-3 font-serif text-3xl font-bold sm:text-5xl">
+                Curated Travel Experiences
+              </h2>
+            </div>
+            <p className="max-w-md text-base text-[#F7F3E9]/80">
+              Select an experience below to explore specialized itineraries or request a personalized plan.
             </p>
           </div>
 
-          <ul className="mt-16 grid border-t border-[#F7F3E9]/15 md:grid-cols-2 md:gap-x-16">
-            {experiences.map(({ Icon, title, note }) => (
-              <li
+          {/* Cards Grid */}
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {experiences.map(({ Icon, title, note, filterPath }) => (
+              <div
                 key={title}
-                className="group flex items-center gap-5 border-b border-[#F7F3E9]/15 py-6 transition-colors duration-300 hover:border-[#C89B3C]"
+                className="group relative flex flex-col justify-between rounded-3xl border border-[#F7F3E9]/15 bg-[#173F35]/70 p-8 transition-all duration-300 hover:border-[#C89B3C] hover:bg-[#1E4D41] hover:shadow-xl"
               >
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-[#F7F3E9]/20 text-[#C89B3C] transition-colors duration-300 group-hover:bg-[#C89B3C] group-hover:text-[#173F35]">
-                  <Icon className="h-5 w-5" aria-hidden="true" />
-                </span>
-                <span>
-                  <span className="block font-serif text-xl font-bold">{title}</span>
-                  <span className="mt-0.5 block text-sm text-[#F7F3E9]/65">{note}</span>
-                </span>
-              </li>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="grid h-12 w-12 place-items-center rounded-2xl border border-[#F7F3E9]/20 bg-[#F7F3E9]/5 text-[#C89B3C] transition-colors duration-300 group-hover:bg-[#C89B3C] group-hover:text-[#173F35]">
+                      <Icon className="h-6 w-6" aria-hidden="true" />
+                    </span>
+                  </div>
+                  <h3 className="mt-6 font-serif text-2xl font-bold text-[#F7F3E9]">{title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-[#F7F3E9]/70">{note}</p>
+                </div>
+
+                {/* FUNCTIONAL EXPLORE BUTTON */}
+                <div className="mt-8 pt-6 border-t border-[#F7F3E9]/10 flex items-center justify-between">
+                  <button
+                    onClick={() => handleExploreAction(filterPath, title)}
+                    className={`inline-flex items-center gap-2 rounded-full border border-[#C89B3C]/40 bg-[#C89B3C]/10 px-4 py-2 text-xs font-bold text-[#C89B3C] transition-all hover:bg-[#C89B3C] hover:text-[#173F35] ${focusRing}`}
+                  >
+                    Explore tours
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </button>
+                  <span className="text-xs text-[#F7F3E9]/50">Guided Expeditions</span>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
+
         </div>
       </section>
 
-      {/* VISION & MISSION */}
-      <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8 md:py-36">
-        <div className="grid gap-8 lg:grid-cols-12">
-          <p className="text-sm font-semibold text-[#8F6A1E] lg:col-span-2 lg:pt-3">Our vision</p>
-          <p className="font-serif text-3xl leading-[1.35] text-[#173F35] sm:text-5xl sm:leading-[1.25] lg:col-span-10">
-            To share Ethiopia's extraordinary natural beauty, unique wildlife, rich cultural heritage and remarkable history with travelers from around the world.
-          </p>
-        </div>
+      {/* CLEAR VISION & MISSION CARDS */}
+      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 md:py-28">
+        <div className="grid gap-8 lg:grid-cols-2">
+          {/* Vision */}
+          <div className="rounded-3xl border border-[#E6DED1] bg-white p-8 shadow-sm sm:p-10 flex flex-col justify-between">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#8F6A1E]">Our Vision</span>
+              <h3 className="mt-3 font-serif text-3xl font-bold text-[#173F35]">
+                Sharing Ethiopia's natural treasures with the world.
+              </h3>
+              <p className="mt-4 text-base leading-relaxed text-[#352D27]/80">
+                To share Ethiopia's extraordinary natural beauty, unique wildlife, rich cultural heritage, and ancient history with travelers seeking deep, authentic connection.
+              </p>
+            </div>
+            <div className="mt-8 flex items-center gap-2 text-sm font-semibold text-[#173F35] border-t border-[#E6DED1] pt-6">
+              <CheckCircle2 className="h-5 w-5 text-[#8F6A1E]" /> Preserving Ethiopian natural heritage
+            </div>
+          </div>
 
-        <div className="mt-16 grid gap-8 border-t border-[#E6DED1] pt-16 lg:grid-cols-12">
-          <p className="text-sm font-semibold text-[#8F6A1E] lg:col-span-2">Our mission</p>
-          <p className="max-w-3xl text-xl leading-[1.85] text-[#352D27]/85 lg:col-span-7">
-            To create memorable, authentic journeys through destination knowledge, genuine Ethiopian hospitality, professional dedication and reliable travel services. We connect travelers with nature, local communities and the true spirit of Ethiopia through responsible and sustainable tourism.
-          </p>
+          {/* Mission */}
+          <div className="rounded-3xl border border-[#E6DED1] bg-[#173F35] p-8 text-[#F7F3E9] shadow-xl sm:p-10 flex flex-col justify-between">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#C89B3C]">Our Mission</span>
+              <h3 className="mt-3 font-serif text-3xl font-bold text-[#F7F3E9]">
+                Authentic, sustainable travel created locally.
+              </h3>
+              <p className="mt-4 text-base leading-relaxed text-[#F7F3E9]/80">
+                To create memorable, authentic journeys through destination knowledge, genuine hospitality, and reliable travel services that directly benefit local communities.
+              </p>
+            </div>
+            <div className="mt-8 flex items-center gap-2 text-sm font-semibold text-[#C89B3C] border-t border-[#F7F3E9]/15 pt-6">
+              <ShieldCheck className="h-5 w-5" /> 100% Sustainable & Responsible Travel
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* PRINCIPLES */}
-      <section className="border-y border-[#E6DED1] bg-white py-24 md:py-32">
-        <div className="mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-12 lg:gap-20">
-          <div className="lg:col-span-5">
-            <h2 className="font-serif text-4xl font-bold leading-[1.08] text-[#173F35] sm:text-5xl">
+      {/* CORE VALUES / IMPACT */}
+      <section className="border-y border-[#E6DED1] bg-white py-20 md:py-28">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="max-w-2xl">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#8F6A1E]">Commitment</span>
+            <h2 className="mt-2 font-serif text-3xl font-bold text-[#173F35] sm:text-4xl">
               Responsible travel, lasting impact
             </h2>
-            <p className="mt-6 max-w-md text-lg leading-[1.8] text-[#352D27]/75">
-              Our commitment extends beyond travel to the conservation and preservation of Ethiopia's natural and cultural heritage.
-            </p>
           </div>
 
-          <div className="space-y-6 lg:col-span-7">
+          <div className="mt-12 grid gap-8 md:grid-cols-2">
             {[
               {
                 Icon: Heart,
-                title: 'Nature and heritage come first',
-                a: "We value responsible tourism, sustainable development, wildlife conservation and the preservation of Ethiopia's natural and cultural heritage.",
-                b: 'Our journeys highlight the ecosystems, wildlife, traditions and communities that make Ethiopia exceptional, while encouraging respect for the places and people we visit.',
+                title: 'Conservation First',
+                desc: "We prioritize responsible tourism, wildlife protection, and cultural preservation. Our itineraries are built to respect delicate highland ecosystems and honor living community traditions.",
               },
               {
                 Icon: ShieldCheck,
-                title: 'Trusted local experts',
-                a: "We don't just show you Ethiopia. We help you experience it through the eyes of people who know it, love it and proudly call it home.",
-                b: 'Every tailor-made journey combines adventure and discovery with genuine connection, reliable service and lasting memories.',
+                title: 'Trusted Local Expertise',
+                desc: "We don't just guide you through Ethiopia—we share our home. Every trip is led by local specialists who ensure safe, seamless, and unforgettable travel experiences.",
               },
-            ].map(({ Icon, title, a, b }) => (
-              <div
-                key={title}
-                className="flex gap-6 rounded-3xl border border-[#E6DED1] bg-[#F7F3E9]/50 p-8 transition-colors duration-300 hover:border-[#C89B3C] sm:p-10"
-              >
-                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-[#173F35] text-[#C89B3C]">
+            ].map(({ Icon, title, desc }) => (
+              <div key={title} className="flex gap-5 rounded-3xl border border-[#E6DED1] bg-[#F7F3E9]/40 p-8">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#173F35] text-[#C89B3C]">
                   <Icon className="h-6 w-6" aria-hidden="true" />
                 </span>
                 <div>
-                  <h3 className="font-serif text-2xl font-bold text-[#173F35]">{title}</h3>
-                  <p className="mt-3 text-lg leading-[1.8] text-[#352D27]/80">{a}</p>
-                  <p className="mt-3 text-lg leading-[1.8] text-[#352D27]/80">{b}</p>
+                  <h3 className="font-serif text-xl font-bold text-[#173F35]">{title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-[#352D27]/80">{desc}</p>
                 </div>
               </div>
             ))}
@@ -251,59 +333,65 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenInquiry, onNavigate 
         </div>
       </section>
 
-      {/* TEAM */}
-      <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8 md:py-32">
-        <div className="grid gap-8 lg:grid-cols-12">
-          <h2 className="font-serif text-4xl font-bold text-[#173F35] sm:text-5xl lg:col-span-4">
-            The people behind every journey
-          </h2>
-          <p className="max-w-2xl text-xl leading-[1.85] text-[#352D27]/80 lg:col-span-8">
-            Rooted in local expertise and inspired by a deep love for our country, we share Ethiopia through the eyes of people who know it, love it and call it home.
-          </p>
+      {/* TEAM PILLARS */}
+      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 md:py-28">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#8F6A1E]">Our Team</span>
+            <h2 className="mt-2 font-serif text-3xl font-bold text-[#173F35] sm:text-4xl">
+              The people behind every journey
+            </h2>
+          </div>
+          <button
+            onClick={() => onOpenInquiry('Custom Guide Request')}
+            className={`inline-flex items-center gap-2 text-sm font-bold text-[#8F6A1E] hover:text-[#173F35] ${focusRing}`}
+          >
+            Meet your trip coordinator <ArrowUpRight className="h-4 w-4" />
+          </button>
         </div>
 
-        <ul className="mt-16 grid divide-y divide-[#E6DED1] border-y border-[#E6DED1] sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-4 lg:divide-x">
-          {team.map(({ Icon, title, note }) => (
-            <li key={title} className="p-8 sm:border-b sm:border-[#E6DED1] lg:border-b-0">
-              <Icon className="h-7 w-7 text-[#8F6A1E]" aria-hidden="true" />
-              <h3 className="mt-6 font-serif text-xl font-bold text-[#173F35]">{title}</h3>
-              <p className="mt-2 text-base leading-relaxed text-[#352D27]/70">{note}</p>
-            </li>
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {teamPillars.map(({ Icon, title, note }, index) => (
+            <div key={title} className="rounded-3xl border border-[#E6DED1] bg-white p-6 sm:p-8">
+              <div className="flex items-center justify-between">
+                <Icon className="h-7 w-7 text-[#8F6A1E]" aria-hidden="true" />
+                <span className="font-serif text-xs font-bold text-[#173F35]/40">0{index + 1}</span>
+              </div>
+              <h3 className="mt-5 font-serif text-lg font-bold text-[#173F35]">{title}</h3>
+              <p className="mt-2 text-xs leading-relaxed text-[#352D27]/70">{note}</p>
+            </div>
           ))}
-        </ul>
+        </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative isolate overflow-hidden bg-[#173F35] py-28 text-center text-[#F7F3E9] md:py-36">
+      {/* FINAL CALL TO ACTION */}
+      <section className="relative isolate overflow-hidden bg-[#173F35] py-24 text-center text-[#F7F3E9] md:py-32">
         <img
           src="https://res.cloudinary.com/dw1ohipim/image/upload/v1789393457/zzfjfc2hfezgwd2dmrfo.jpg"
-          alt=""
-          className="absolute inset-0 -z-10 h-full w-full object-cover opacity-30"
+          alt="Ethiopia scenery"
+          className="absolute inset-0 -z-10 h-full w-full object-cover opacity-25"
         />
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-[#173F35] via-[#173F35]/70 to-[#173F35]/30" />
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-[#173F35] via-[#173F35]/80 to-[#173F35]/40" />
 
         <div className="mx-auto max-w-3xl px-5">
           <MapPin className="mx-auto h-8 w-8 text-[#C89B3C]" aria-hidden="true" />
-          <h2 className="mt-6 font-serif text-4xl font-bold leading-[1.05] md:text-6xl">Where do you want to go?</h2>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[#F7F3E9]/85">
-            Browse the top destinations in Ethiopia, chosen for travelers who love rich culture, ancient history and untouched natural beauty.
+          <h2 className="mt-4 font-serif text-3xl font-bold sm:text-5xl">Where do you want to go?</h2>
+          <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-[#F7F3E9]/85">
+            Discover historic circuits, wildlife sanctuaries, and custom treks with dedicated Ethiopian hosts.
           </p>
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <button
               onClick={() => onNavigate('/destinations')}
-              className={`group inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#C89B3C] px-8 py-4 text-sm font-bold tracking-wide text-[#173F35] transition-colors duration-300 hover:bg-[#d8ab4a] sm:w-auto ${focusRing}`}
+              className={`group inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#C89B3C] px-8 py-4 text-sm font-bold text-[#173F35] transition-all duration-300 hover:bg-[#d8ab4a] sm:w-auto ${focusRing}`}
             >
-              Explore destinations
-              <ArrowUpRight
-                className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
+              Explore Destinations
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </button>
             <button
-              onClick={() => onOpenInquiry()}
-              className={`w-full rounded-full border border-[#F7F3E9]/50 px-8 py-4 text-sm font-bold tracking-wide text-[#F7F3E9] transition-colors duration-300 hover:border-[#C89B3C] hover:text-[#C89B3C] sm:w-auto ${focusRing}`}
+              onClick={() => onOpenInquiry('Custom Ethiopia Trip')}
+              className={`w-full rounded-full border border-[#F7F3E9]/50 bg-[#173F35]/40 backdrop-blur-sm px-8 py-4 text-sm font-bold text-[#F7F3E9] transition-all duration-300 hover:border-[#C89B3C] hover:text-[#C89B3C] sm:w-auto ${focusRing}`}
             >
-              Plan your trip
+              Plan Your Custom Trip
             </button>
           </div>
         </div>
